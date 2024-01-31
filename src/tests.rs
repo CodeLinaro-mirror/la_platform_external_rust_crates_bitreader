@@ -221,6 +221,7 @@ fn signed_values() {
     }
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn boolean_values() {
     let bytes: Vec<u8> = (0..16).collect();
@@ -313,4 +314,18 @@ fn relative_reader() {
         length: 12,
         requested: 1
     });
+}
+
+#[test]
+fn test_read_u64_max() {
+    let bytes = &[0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
+    let mut reader = BitReader::new(bytes);
+    assert_eq!(reader.read_u64(64).unwrap(), u64::MAX);
+}
+
+#[test]
+fn test_read_i64_max() {
+    let bytes = &[0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
+    let mut reader = BitReader::new(bytes);
+    assert_eq!(reader.read_i64(64).unwrap(), -1);
 }
